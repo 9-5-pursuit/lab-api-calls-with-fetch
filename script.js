@@ -12,17 +12,21 @@ document.querySelector('form').addEventListener("submit", (event) => {
                 articleElement.setAttribute('class', 'card');
 
                 articleElement.innerHTML = `
-      <h2>${item.category}</h2>
-      <p>${item.question}</p>
-      <button>Show Answer</button>
-      <p class="hidden">${item.correct_answer}</p>
-    `;
+                <h2>${item.category}</h2>
+                <p>${item.question}</p>
+                <button>Show Answer</button>
+                <p class="hidden">${item.correct_answer}</p>
+                `;
+                //articleElement.querySelector('.hidden').hidden = 'true'
                 // Add an event listener to the button in each article
                 const button = articleElement.querySelector('button');
                 const answerEl = articleElement.querySelector('.hidden');
                 button.addEventListener('click', () => {
                     answerEl.style.display = 'block';
                 });
+                if (item.difficulty == 'hard') {
+                    articleElement.style.borderColor = 'red'
+                }
                 mainElement.appendChild(articleElement);
             });
         }
