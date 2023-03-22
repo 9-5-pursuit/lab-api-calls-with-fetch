@@ -39,5 +39,8 @@ fetch('https://opentdb.com/api.php?amount=10')
         } 
     })
 })
+.catch((error) => {
+    console.log(error);
+  }); 
 
 
