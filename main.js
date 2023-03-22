@@ -43,7 +43,7 @@ formElement.addEventListener("submit", (event) => {
         if(object.difficulty === "medium"){
             article.setAttribute("style", "border: 4px solid yellow");
         }
-        if(object.difficulty === "easy"){
+        if(object.difficulty === "hard"){
             article.setAttribute("style", "border: 4px solid red");
         }
 
