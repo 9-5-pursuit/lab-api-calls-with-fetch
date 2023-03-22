@@ -17,7 +17,6 @@ document.querySelector('form').addEventListener("submit", (event) => {
                 <button>Show Answer</button>
                 <p class="hidden">${item.correct_answer}</p>
                 `;
-                //articleElement.querySelector('.hidden').hidden = 'true'
                 // Add an event listener to the button in each article
                 const button = articleElement.querySelector('button');
                 const answerEl = articleElement.querySelector('.hidden');
