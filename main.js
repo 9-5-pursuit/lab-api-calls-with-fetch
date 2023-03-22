@@ -18,7 +18,7 @@ formElement.addEventListener("submit", (event) => {
         article.append(h2);
 
         const paragraph = document.createElement("p");
-        paragraph.textContent = object.question;
+        paragraph.innerHTML = object.question;
         article.append(paragraph);
 
         let button = document.createElement("button");
