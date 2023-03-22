@@ -78,6 +78,10 @@ document.querySelector('form').addEventListener("submit", (event) => {
                         lastli.addEventListener('mouseleave', function () {
                             lastli.style.backgroundColor = '';
                         });
+                        // shuffle the list items
+                        for (let i = newul.children.length; i >= 0; i--) {
+                            newul.appendChild(newul.children[Math.random() * i | 0]);
+                        }
                         return newul;
                     } else {
                         const answerEl = articleElement.querySelector('.hidden');
