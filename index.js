@@ -1,4 +1,4 @@
-const BASE_URL = "https://opentdb.com/api_config.php";
+const BASE_URL = "https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=boolean";
 
 fetch(BASE_URL)
 .then((response) => response.json())
@@ -7,22 +7,18 @@ fetch(BASE_URL)
 
 function displayCard({ results }) {
     const [questions] = results;
-    const {category, question, answer, language} = questions.card;
 
     const main = document.querySelector("main");
     const newQuestions = document.querySelector("button");
 
-    newQuestions.addEventListener("click", () => {
-        for (let i = 0; i < 11; i++){
+    newQuestions.addEventListener("click", (event) => {
+        event.preventDefault();
+        for (let i = 0; i < results.length; i++){
             const questionCard = document.createElement("article");
             questionCard.classList.add("card");
-            questionCard.innerHTML = `<h2>${category}</h2><p>${question}</p><button>Show Answer</button><p class="hidden">${answer}</p><p>${language}</p>`;
+            questionCard.innerHTML = `<h2>${results[i].category}</h2><p>${results[i].question}</p><button>Show Answer</button><p class="hidden">${results[i].correct_answer}</p>`;
             main.append(questionCard);
         }
-        const showAnswer = document.querySelector(".hidden");
-        showAnswer.addEventListener("click", (event) => {
-            
-        });
     });
 }
 
