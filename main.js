@@ -3,7 +3,9 @@ const BASE_URL = "https://opentdb.com/api.php?amount=10";
 fetch(BASE_URL)
   .then((response) => response.json())
   .then(displayQuestion)
-  .catch();
+  .catch((error) => {
+    console.log(error);
+  });
 
 const form = document.querySelector("form");
 
@@ -34,11 +36,8 @@ function displayQuestion({ results }) {
       p2.classList.toggle("hidden");
     });
   });
-
-  
 }
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   displayQuestion;
 });
-
