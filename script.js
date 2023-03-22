@@ -95,24 +95,25 @@ document.querySelector('form').addEventListener("submit", (event) => {
                 <p>${item.question}</p>
                 <button>${addon2 ?? 'Show Answer'}</button>
                 <p class="hidden">${item.correct_answer}</p>
+                <div class="unList"></div>
                 `;
+                //make multichoice list hidden
+                if (addon2) {
+                let hiddenUl = articleElement.querySelector('.unList')
+                hiddenUl.style.display = 'none'
+                hiddenUl.appendChild(multichoice())
+                }
                 // Add an event listener to the button in each article
                 const button = articleElement.querySelector('button');
-
                 button.addEventListener('click', () => {
                     if (addon2) {
-                        articleElement.appendChild(multichoice())
+                        let hiddenUl2 = articleElement.querySelector('.unList')
+                        hiddenUl2.style.display = 'block'
                     }
                     multichoice();
                 });
                 if (item.difficulty == 'hard') {
                     articleElement.style.borderColor = 'red'
-                }
-                //handle bug with multiple ul in article card
-                if (articleElement.querySelectorAll('ul').length > 1) {
-                    let uLElements = articleElement.querySelectorAll('ul')
-                    let lastUl = uLElements[uLElements.length - 1]
-                    lastUl.remove()
                 }
                 mainElement.appendChild(articleElement);
             });
