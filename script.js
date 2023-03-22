@@ -9,7 +9,7 @@ let option1 = document.createElement('option');
 select.setAttribute('value', "any")
 option1.textContent = "--Any Category--";
 select.appendChild(option1);
-
+//make dropdown from the categories api
 fetch("https://opentdb.com/api_category.php").then(response => response.json()).then(
     items => {
         items['trivia_categories'].forEach(item => {
@@ -24,38 +24,91 @@ fetch("https://opentdb.com/api_category.php").then(response => response.json()).
 const button = form.querySelector('button');
 form.insertBefore(select, button);
 
+//add a checkbox div for multiple choice game
+let cdiv = document.createElement('div');
+let chbx = document.createElement('input');
+let label = document.createElement('label');
+label.appendChild(document.createTextNode('Multiple choice toggle'));
+chbx.setAttribute('type', 'checkbox')
+chbx.setAttribute('value', 'gamechoice')
+chbx.setAttribute('id', 'myCheckbox')
+cdiv.appendChild(chbx)
+cdiv.appendChild(label)
+form.appendChild(cdiv)
+
 document.querySelector('form').addEventListener("submit", (event) => {
     event.preventDefault()
 
     const category = form.elements.category.value;
     let addon;
     if (category == '--Any Category--') addon = ''
-    else addon = "&category=" + category
-
-    fetch(`${BASE_URL}${addon}`).then((response) => response.json())
+    else addon = "&category=" + category;
+    //Multiple choice button value
+    let addon2;
+    if (form.elements.myCheckbox.checked) {
+        addon2 = 'SHOW MULTIPLE CHOICES';
+    }
+    fetch(`${BASE_URL}${addon}${addon2 ? '&type=multiple' : ''}`).then((response) => response.json())
         .then(displayCard => {
+            //clear grid for new trivia cards
             const mainElement = document.querySelector('.centered');
             const articleElements = mainElement.querySelectorAll('article');
-            for (let i = 0; i < articleElements.length; i++) {
-                mainElement.removeChild(articleElements[i]);
+            for (let e of articleElements) {
+                mainElement.removeChild(e);
             }
             displayCard['results'].forEach(item => {
+                //method to add list of multichoice with
+                //highlighted correct answer
+                const multichoice = () => {
+                    if (addon2) {
+                        let arr = item['incorrect_answers']
+                        arr.push(item['correct_answer'])
+                        let newul = document.createElement('ul')
+                        arr.forEach(e => {
+                            let newli = document.createElement('li')
+                            newli.textContent = e
+                            newul.appendChild(newli)
+                        })
+                        //hover effect on the correct answer in the multi
+                        //choice list
+                        let lastli = newul.lastChild;
+                        lastli.addEventListener('mouseenter', function () {
+                            lastli.style.backgroundColor = 'yellow';
+                        });
+                        lastli.addEventListener('mouseleave', function () {
+                            lastli.style.backgroundColor = '';
+                        });
+                        return newul;
+                    } else {
+                        const answerEl = articleElement.querySelector('.hidden');
+                        answerEl.style.display = 'block';
+                    }
+                }
                 const articleElement = document.createElement('article');
                 articleElement.setAttribute('class', 'card');
                 articleElement.innerHTML = `
                 <h2>${item.category}</h2>
                 <p>${item.question}</p>
-                <button>Show Answer</button>
+                <button>${addon2 ?? 'Show Answer'}</button>
                 <p class="hidden">${item.correct_answer}</p>
                 `;
                 // Add an event listener to the button in each article
                 const button = articleElement.querySelector('button');
-                const answerEl = articleElement.querySelector('.hidden');
+
                 button.addEventListener('click', () => {
-                    answerEl.style.display = 'block';
+                    if (addon2) {
+                        articleElement.appendChild(multichoice())
+                    }
+                    multichoice();
                 });
                 if (item.difficulty == 'hard') {
                     articleElement.style.borderColor = 'red'
+                }
+                //handle bug with multiple ul in article card
+                if (articleElement.querySelectorAll('ul').length > 1) {
+                    let uLElements = articleElement.querySelectorAll('ul')
+                    let lastUl = uLElements[uLElements.length - 1]
+                    lastUl.remove()
                 }
                 mainElement.appendChild(articleElement);
             });
