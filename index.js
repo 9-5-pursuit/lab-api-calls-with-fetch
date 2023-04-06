@@ -1,31 +1,64 @@
-const form = document.querySelector("form"); // puts form in variable for easy use
+const form = document.querySelector("form");
+const main = document.querySelector("main");
+const BASE_URL = "https://opentdb.com/api.php?amount=10";
+// <!----------------------------listens for submission---------------------------------------------->
 form.addEventListener("submit", (event) => {
-  event.preventDefault(); //avoids refreshing the form to default values
-});
-
-const BASE_URL = "http://opentdb.com/api.php?amount=10"; // API URL
-
-fetch(BASE_URL)
-  .then((response) => response.json()) //parse data from response
-  .then((json) => {
-    data = json.results; // usable data
-    console.log(data);
-    data.forEach((element) => {
-      const main = document.querySelector("main"); //accesses main html section
-      const article = document.createElement("article"); // creates article to hold trivia card
-      article.classList.add("card"); // adds card class for tests
-      main.append(article);
-      article.innerHTML = `<h2>${element.category}</h2><p>${element.question}</p><button class="answer">Show Answer</button><p class="hidden", "class">${element.correct_answer}</p>`;
-
-      const hiddenClass = document.querySelector(".hidden");
-      const button = document.querySelector(".answer");
-
-      button.addEventListener("click", (event) => {
-        hiddenClass.style.display = "block";
+  // <!-------------stops refresh-------------------------------------------------------------------->
+  event.preventDefault();
+  //<!--------------fetch API data------------------------------------------------------------------->
+  fetch(BASE_URL)
+    .then((reponse) => reponse.json())
+    .then((json) => {
+      // <!--------usable JSON data------------------------------------------------------------------>
+      const data = json.results;
+      console.log(data);
+      // <!--------function for each Trivia card----------------------------------------------------->
+      data.forEach((result) => {
+        TriviaQuestion(result);
       });
+    })
+    .catch((error) => {
+      console.log(error);
     });
-  })
-  .catch((error) => {
-    // You can do what you like with the error here.
-    console.log(error);
+});
+//  <!-----------------------under the hood---------------------------------------------------------->
+const TriviaQuestion = (result) => {
+  // <!-----------------------creating card---------------------------------------------------------->
+
+  const card = document.createElement("article");
+  card.classList.add("card");
+
+  if (result.difficulty === "easy") {
+    card.setAttribute("style", "border: 10px solid yellow");
+  }
+  if (result.difficulty === "medium") {
+    card.setAttribute("style", "border: 10px solid orange");
+  }
+  if (result.difficulty === "hard") {
+    card.setAttribute("style", "border: 10px solid red");
+  }
+
+  const category = document.createElement("h2");
+
+  category.innerHTML = result.category;
+
+  const question = document.createElement("p");
+
+  question.innerHTML = result.question;
+
+  const button = document.createElement("button");
+
+  button.innerHTML = "Show Answer";
+
+  const hidAnswer = document.createElement("p");
+
+  hidAnswer.classList.add("hidden");
+  hidAnswer.innerHTML = result.correct_answer;
+  // <!-----------------------reveals the answer ------------------------------------------------------>
+  button.addEventListener("click", () => {
+    hidAnswer.classList.toggle(`hidden`);
   });
+  // <!-------------------------locks card in place-------------------------------------------------->
+  main.append(card);
+  card.append(category, question, hidAnswer, button);
+};
