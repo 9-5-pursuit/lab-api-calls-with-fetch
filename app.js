@@ -19,7 +19,7 @@ fetch("https://opentdb.com/api.php?amount=10")
 
     const article = document.createElement("article");
      article.classList.add("card");
-      article.innerHTML = `<h2>${element.category}</h2><p>${element.question}</p><button class='answer'>Show Answer</button><p class='hideen'>${element.correct_answer}</p>`;
+      article.innerHTML = `<h2>${element.category}</h2><p>${element.question}</p><button class='answer'>Show Answer</button><p class='hidden'>${element.correct_answer}</p>`;
       main.append(article);
 
       const button = document.querySelector(".answer");
@@ -30,6 +30,7 @@ fetch("https://opentdb.com/api.php?amount=10")
       button.addEventListener("click", (event) => {
         
         hiddenClass.style.display = "block";
+        button.nextSibling.classList.toggle("hidden");
       })
 
 
